@@ -1,0 +1,9 @@
+<div align="center">
+<img src="./files/logo/scrimp256.png" alt="Scrimp Editor"/>
+</div>
+
+# Scrimp Editor
+
+Customized CodeMirror editor for use with the Salinity Editor.
+
+<br />

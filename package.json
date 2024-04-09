@@ -1,0 +1,47 @@
+{
+  "name": "scrimp",
+  "version": "0.0.1",
+  "description": "Customized CodeMirror editor for use with the Salinity Editor.",
+  "module": "src/Scrimp.js",
+  "main": "build/scrimp.module.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "build/*",
+    "css/*",
+    "src/*"
+  ],
+  "keywords": [
+    "scrimp",
+    "salinity",
+    "engine",
+    "text",
+    "editor",
+    "library",
+    "module",
+    "javascript",
+    "ui",
+    "es6",
+    "component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salinityengine/scrimp.git"
+  },
+  "author": "Stephens Nunnally <stephens@scidian.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/salinityengine/scrimp/issues"
+  },
+  "homepage": "https://github.com/salinityengine/scrimp",
+  "private": false,
+  "devDependencies": {
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup-plugin-cleanup": "^3.2.1",
+    "rollup-plugin-postcss": "^4.0.2"
+  }
+}
