@@ -6,68 +6,43 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1' />
     <meta name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'>
     <link rel='icon' type='image/png' href='./files/logo/favicon.png' />
-
-    <!-- -------------------- STYLE -------------------- -->
-
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.0.1/codemirror.min.css'>
-
+    <style>
+        #editor {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            max-height: 500px;
+            overflow: auto;
+        }
+    </style>
 </head>
 <body>
 
-    <div id="editor"></div>
+    <div id='editor'></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.0.1/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.0.1/lang-javascript.min.js"></script>
-
-    <script>
-        const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-            lineNumbers: true,
-            mode: 'javascript',
-            theme: 'default',
-            indentUnit: 2,
-            tabSize: 2,
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            extraKeys: {
-                'Ctrl-Space': 'autocomplete',
-                'Ctrl-/': 'toggleComment',
-                'Ctrl-Enter': 'run',
-            },
-        });
-
-        // Set initial content
-        editor.setValue(`function greet(name) {
-            console.log('Hello, ' + name + '!');
-        }
-
-        greet('CodeMirror');`);
-
-        // Get editor content
-        function getEditorContent() {
-            return editor.getValue();
-        }
-
-        // Set editor content
-        function setEditorContent(content) {
-        editor.setValue(content);
-        }
-
-        // Run the code
-        function runCode() {
-            const code = getEditorContent();
-            try {
-                eval(code);
-            } catch (error) {
-                console.error('Error:', error);
+    <script type='importmap'>
+        {
+            "imports": {
+                "scrimp":     "./build/scrimp.module.js"
             }
         }
+    </script>
 
-        // Attach the run function to the 'Ctrl-Enter' key
-        editor.setOption('extraKeys', {
-            'Ctrl-Enter': runCode,
+    <script type='module'>
+        import { Scrimp } from 'scrimp';
+
+        const initialText = `function greet(name) {\n    console.log('Hello, ' + name + '!');\n}\n\ngreet('CodeMirror');`;
+
+        const editor = new Scrimp(document.getElementById('editor'), initialText);
+
+        editor.addKeymap('Ctrl-Enter', (scrimp) => {
+            const code = scrimp.getContent();
+            try {
+                eval(code);
+            } catch (error) { console.error('Error:', error); }
         });
 
-  </script>
+    </script>
 
 </body>
 </html>

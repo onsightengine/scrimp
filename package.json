@@ -1,6 +1,6 @@
 {
   "name": "scrimp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Customized CodeMirror editor for use with the Salinity Editor.",
   "module": "src/Scrimp.js",
   "main": "build/scrimp.module.js",
@@ -43,5 +43,19 @@
     "@rollup/plugin-terser": "^0.4.4",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-postcss": "^4.0.2"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.15.0",
+    "@codemirror/commands": "^6.3.3",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/language": "^6.10.1",
+    "@codemirror/lint": "^6.5.0",
+    "@codemirror/search": "^6.5.6",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.26.2",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "codemirror": "^6.0.1",
+    "rollup": "^4.14.1"
   }
 }

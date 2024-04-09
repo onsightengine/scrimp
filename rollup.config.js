@@ -2,8 +2,9 @@ import cleanup from 'rollup-plugin-cleanup';                // Remove comments, 
 import postcss from 'rollup-plugin-postcss';                // Include CSS
 import json from '@rollup/plugin-json';                     // Import JSON
 import terser from '@rollup/plugin-terser';                 // Remove comments, minify
+import { nodeResolve } from "@rollup/plugin-node-resolve";  // Resolver
 
-import pkg from './package.json';
+import pkg from './package.json' with { type: "json" };
 
 function header() {
     return {
@@ -28,6 +29,7 @@ const builds = [
         treeshake: false,
 
         plugins: [
+            nodeResolve(),
             cleanup({
                 comments: 'none',
                 extensions: [ 'js', 'ts' ],
@@ -37,7 +39,6 @@ const builds = [
             postcss({
                 extensions: [ '.css' ],
             }),
-            image(),
         ],
 
         output: [{
@@ -50,28 +51,28 @@ const builds = [
         }],
     },
 
-    { // Minified
-        input: './src/Scrimp.js',
-        treeshake: false,
+    // { // Minified
+    //     input: './src/Scrimp.js',
+    //     treeshake: false,
 
-        plugins: [
-            json(),
-            postcss({
-                extensions: [ '.css' ],
-            }),
-            image(),
-        ],
+    //     plugins: [
+    //         nodeResolve(),
+    //         json(),
+    //         postcss({
+    //             extensions: [ '.css' ],
+    //         }),
+    //     ],
 
-        output: [{
-            format: 'esm',
-            file: './build/scrimp.min.js',
-            sourcemap: false,
-            plugins: [
-                terser({ format: { comments: false } }),
-                header(),
-            ],
-        }],
-    },
+    //     output: [{
+    //         format: 'esm',
+    //         file: './build/scrimp.min.js',
+    //         sourcemap: false,
+    //         plugins: [
+    //             terser({ format: { comments: false } }),
+    //             header(),
+    //         ],
+    //     }],
+    // },
 
 ];
 
