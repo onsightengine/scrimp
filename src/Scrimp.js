@@ -141,6 +141,15 @@ class Scrimp extends EditorView {
         this.dispatch({ changes: { from, to, insert: content } });
     }
 
+    /******************** COMMANDS */
+
+    // https://github.com/codemirror/commands/blob/main/src/commands.ts
+
+    selectAll() {
+        const state = this.viewState.state;
+        this.dispatch(state.update({ selection: {anchor: 0, head: state.doc.length}, userEvent: "select" }));
+    }
+
 }
 
 export { Scrimp };

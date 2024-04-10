@@ -23051,6 +23051,10 @@ class Scrimp extends EditorView {
     setContent(content, from = 0, to = this.state.doc.length) {
         this.dispatch({ changes: { from, to, insert: content } });
     }
+    selectAll() {
+        const state = this.viewState.state;
+        this.dispatch(state.update({ selection: {anchor: 0, head: state.doc.length}, userEvent: "select" }));
+    }
 }
 
 export { Scrimp };

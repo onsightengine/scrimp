@@ -33,7 +33,7 @@
 
         const initialText = `function greet(name) {\n    console.log('Hello, ' + name + '!');\n}\n\ngreet('CodeMirror');`;
 
-        const editor = new Scrimp(document.getElementById('editor'), initialText);
+        const editor = new Scrimp(document.getElementById('editor'), { initialText });
 
         editor.addKeymap('Ctrl-Enter', (scrimp) => {
             const code = scrimp.getContent();
