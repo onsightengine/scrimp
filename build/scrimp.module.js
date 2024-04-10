@@ -4,7 +4,7 @@
  * @author      Stephens Nunnally <@stevinz>
  * @license     MIT - Copyright (c) 2024 Stephens Nunnally
  * @source      https://github.com/salinityengine/scripter
- * @version     v0.0.1
+ * @version     v0.0.2
  */
 class Text {
     lineAt(pos) {
@@ -22905,6 +22905,72 @@ const oneDarkHighlightStyle = HighlightStyle.define([
 ]);
 const oneDark = [oneDarkTheme, syntaxHighlighting(oneDarkHighlightStyle)];
 
+const createTheme = ({ variant, settings, styles }) => {
+    const theme = EditorView.theme({
+        '&': {
+            backgroundColor: settings.background,
+            color: settings.foreground,
+        },
+        '.cm-content': {
+            caretColor: settings.caret,
+        },
+        '.cm-cursor, .cm-dropCursor': {
+            borderLeftColor: settings.caret,
+        },
+        '&.cm-focused .cm-selectionBackgroundm .cm-selectionBackground, .cm-content ::selection': {
+            backgroundColor: settings.selection,
+        },
+        '.cm-selectionMatch': {
+            backgroundColor: settings.selectionMatch,
+        },
+        '.cm-activeLine': {
+            backgroundColor: settings.lineHighlight,
+        },
+        '.cm-gutters': {
+            backgroundColor: settings.gutterBackground,
+            color: settings.gutterForeground,
+        },
+        '.cm-activeLineGutter': {
+            backgroundColor: settings.lineHighlight,
+        },
+    }, {
+        dark: variant === 'dark',
+    });
+    const highlightStyle = HighlightStyle.define(styles);
+    const extension = [ theme, syntaxHighlighting(highlightStyle) ];
+    return extension;
+};
+
+const themeSuey = createTheme({
+    variant: 'dark',
+    settings: {
+        background: 'rgba(var(--background-light), 0.5)',
+        foreground: 'rgb(var(--icon))',
+        caret: 'rgb(var(--icon))',
+        selection: 'rgba(var(--complement), 0.25)',
+        selectionMatch: 'rgba(var(--triadic1), 0.5)',
+        lineHighlight: 'rgba(var(--button-dark), 0.2)',
+        gutterBackground: 'rgba(var(--background-dark), 0.5)',
+        gutterForeground: 'rgb(var(--text-dark))',
+    },
+    styles: [
+        { tag: tags.comment,                           color: 'rgb(var(--text-dark))', },
+        { tag: tags.variableName,                      color: 'rgb(var(--text-light))', },
+        { tag: [ tags.string, tags.special(tags.brace) ],    color: 'rgb(var(--triadic2))', },
+        { tag: tags.number,                            color: 'rgb(var(--triadic1))', },
+        { tag: tags.bool,                              color: 'rgb(var(--triadic1))', },
+        { tag: tags.null,                              color: 'rgb(var(--triadic3))', },
+        { tag: tags.keyword,                           color: 'rgb(var(--complement))', },
+        { tag: tags.operator,                          color: 'rgb(var(--triadic6))', },
+        { tag: tags.className,                         color: 'rgb(var(--icon))', },
+        { tag: tags.definition(tags.typeName),            color: 'rgb(var(--icon))', },
+        { tag: tags.typeName,                          color: 'rgb(var(--icon))', },
+        { tag: tags.angleBracket,                      color: 'rgb(var(--text-dark))', },
+        { tag: tags.tagName,                           color: 'rgb(var(--text-dark))', },
+        { tag: tags.attributeName,                     color: 'rgb(var(--text-dark))', },
+    ],
+});
+
 class Scrimp extends EditorView {
     static defaultExtensions() {
         return [
@@ -22913,7 +22979,6 @@ class Scrimp extends EditorView {
             highlightSpecialChars(),
             history(),
             foldGutter(),
-            drawSelection(),
             dropCursor(),
             EditorState.allowMultipleSelections.of(true),
             indentOnInput(),
@@ -22938,20 +23003,32 @@ class Scrimp extends EditorView {
             ]),
         ];
     }
-    constructor(parent, initialContents = '', options = { dark: true, tabSize: 4, language: [ 'javascript' ] }) {
+    constructor(parent, options = {}) {
+        if (options.initialContents == null) options.initialContents = '';
+        if (options.theme == null) options.theme = 'none';
+        if (options.tabSize == null) options.tabSize = 4;
+        if (options.language == null) options.language = [ 'javascript' ];
+        if (options.linter == null) options.linter = true;
         super({ parent });
         const extensions = Scrimp.defaultExtensions();
+        let linterCount = 0;
         if (options) {
-            if (options.dark) extensions.push(oneDark);
+            if (options.theme) {
+                if (options.theme === 'dark') { extensions.push(oneDark); }
+                if (options.theme === 'suey') { extensions.push(themeSuey); }
+            }
             if (options.tabSize) extensions.push(indentUnit.of(" ".repeat(options.tabSize)));
             if (Array.isArray(options.language)) {
                 for (const lang of options.language) {
-                    if (lang === 'javascript') extensions.push(javascript());
+                    if (lang === 'javascript') {
+                        extensions.push(javascript());
+                    }
                 }
             }
         }
+        if (linterCount > 0) extensions.push(lintGutter());
         const state = EditorState.create({
-            doc: initialContents,
+            doc: options.initialContents,
             extensions,
         });
         this.setState(state);

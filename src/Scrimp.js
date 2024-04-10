@@ -9,9 +9,37 @@ import { foldGutter, indentOnInput, indentUnit, syntaxHighlighting, defaultHighl
 import { history, defaultKeymap, historyKeymap, insertTab, indentLess } from '@codemirror/commands';
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search';
 import { closeBrackets, autocompletion, closeBracketsKeymap, completionKeymap } from '@codemirror/autocomplete';
-import { lintKeymap } from '@codemirror/lint';
+import { lintKeymap, linter, lintGutter } from '@codemirror/lint';
+
+// Language
 import { javascript } from "@codemirror/lang-javascript";
+
+// Theme
+// - Editor: https://thememirror.net/create
 import { oneDark } from "@codemirror/theme-one-dark";
+import { themeSuey } from './theme/theme-suey.js';
+
+// // Linter (find errors)
+// import esprima from 'esprima'; // v4.0.1 https://github.com/jquery/esprima
+//
+// const esprimaLinter = linter(view => {
+//     const diagnostics = [];
+//     const code = view.state.doc.toString();
+//     try {
+//         esprima.parse(code, { tolerant: true, loc: true });
+//     } catch (error) {
+//         if (error instanceof SyntaxError) {
+//             const diagnostic = {
+//             from: view.state.doc.line(error.lineNumber - 1).from + error.column - 1,
+//             to: view.state.doc.line(error.lineNumber - 1).to,
+//             message: error.description,
+//             severity: 'error',
+//             };
+//             diagnostics.push(diagnostic);
+//         }
+//     }
+//     return diagnostics;
+// });
 
 class Scrimp extends EditorView {
 
@@ -22,7 +50,7 @@ class Scrimp extends EditorView {
             highlightSpecialChars(),
             history(),
             foldGutter(),
-            drawSelection(),
+            // drawSelection(), //NOTE: Don't want, allows browser to draw native selection color
             dropCursor(),
             EditorState.allowMultipleSelections.of(true),
             indentOnInput(),
@@ -48,7 +76,13 @@ class Scrimp extends EditorView {
         ];
     }
 
-    constructor(parent, initialContents = '', options = { dark: true, tabSize: 4, language: [ 'javascript' ] }) {
+    constructor(parent, options = {}) {
+        if (options.initialContents == null) options.initialContents = '';
+        if (options.theme == null) options.theme = 'none';
+        if (options.tabSize == null) options.tabSize = 4;
+        if (options.language == null) options.language = [ 'javascript' ];
+        if (options.linter == null) options.linter = true;
+
         // EditorView
         super({ parent });
 
@@ -56,19 +90,27 @@ class Scrimp extends EditorView {
         const extensions = Scrimp.defaultExtensions();
 
         // Options
+        let linterCount = 0;
         if (options) {
-            if (options.dark) extensions.push(oneDark);
+            if (options.theme) {
+                if (options.theme === 'dark') { extensions.push(oneDark); }
+                if (options.theme === 'suey') { extensions.push(themeSuey); }
+            }
             if (options.tabSize) extensions.push(indentUnit.of(" ".repeat(options.tabSize)));
             if (Array.isArray(options.language)) {
                 for (const lang of options.language) {
-                    if (lang === 'javascript') extensions.push(javascript());
+                    if (lang === 'javascript') {
+                        extensions.push(javascript());
+                        // if (options.linter) extensions.push(esprimaLinter);
+                    }
                 }
             }
         }
+        if (linterCount > 0) extensions.push(lintGutter());
 
         // State
         const state = EditorState.create({
-            doc: initialContents,
+            doc: options.initialContents,
             extensions,
         });
         this.setState(state);
