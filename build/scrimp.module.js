@@ -22950,7 +22950,7 @@ const themeSuey = createTheme({
         selection: 'rgba(var(--complement), 0.25)',
         selectionMatch: 'rgba(var(--triadic1), 0.5)',
         lineHighlight: 'rgba(var(--button-dark), 0.2)',
-        gutterBackground: 'rgba(var(--background-dark), 0.5)',
+        gutterBackground: 'rgb(var(--background-light))',
         gutterForeground: 'rgb(var(--text-dark))',
     },
     styles: [
