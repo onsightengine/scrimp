@@ -2,8 +2,8 @@
 <img src="./files/logo/scrimp256.png" alt="Scrimp Editor"/>
 </div>
 
-# Scrimp Editor
+# Scrimp
 
-Customized CodeMirror editor for use with the Salinity Editor.
+Customized CodeMirror 6 editor for use with the Salinity Engine.
 
 <br />

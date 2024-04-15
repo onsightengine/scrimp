@@ -1,7 +1,7 @@
 {
-  "name": "scrimp",
-  "version": "0.0.2",
-  "description": "Customized CodeMirror editor for use with the Salinity Editor.",
+  "name": "@salinity/scrimp",
+  "version": "0.0.1",
+  "description": "Customized CodeMirror editor for use with the Salinity Engine.",
   "module": "src/Scrimp.js",
   "main": "build/scrimp.module.js",
   "type": "module",

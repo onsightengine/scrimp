@@ -4,7 +4,7 @@
  * @author      Stephens Nunnally <@stevinz>
  * @license     MIT - Copyright (c) 2024 Stephens Nunnally
  * @source      https://github.com/salinityengine/scripter
- * @version     v0.0.2
+ * @version     v0.0.1
  */
 class Text {
     lineAt(pos) {
@@ -22949,7 +22949,7 @@ const themeSuey = createTheme({
         caret: 'rgb(var(--icon))',
         selection: 'rgba(var(--complement), 0.25)',
         selectionMatch: 'rgba(var(--triadic1), 0.5)',
-        lineHighlight: 'rgba(var(--button-dark), 0.2)',
+        lineHighlight: 'rgba(var(--button-light), 0.25)',
         gutterBackground: 'rgb(var(--background-light))',
         gutterForeground: 'rgb(var(--text-dark))',
     },
