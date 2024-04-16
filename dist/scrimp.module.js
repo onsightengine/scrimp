@@ -4,7 +4,7 @@
  * @author      Stephens Nunnally <@stevinz>
  * @license     MIT - Copyright (c) 2024 Stephens Nunnally
  * @source      https://github.com/salinityengine/scripter
- * @version     v0.0.1
+ * @version     v0.0.2
  */
 class Text {
     lineAt(pos) {

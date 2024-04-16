@@ -43,7 +43,7 @@ const builds = [
 
         output: [{
             format: 'esm',
-            file: './build/scrimp.module.js',
+            file: './dist/scrimp.module.js',
             sourcemap: false,
             plugins: [
                 header(),
@@ -65,7 +65,7 @@ const builds = [
 
     //     output: [{
     //         format: 'esm',
-    //         file: './build/scrimp.min.js',
+    //         file: './dist/scrimp.min.js',
     //         sourcemap: false,
     //         plugins: [
     //             terser({ format: { comments: false } }),
