@@ -4,7 +4,8 @@
 // https://github.com/RPGillespie6/codemirror-quickstart
 
 import { EditorState, StateEffect, Compartment } from '@codemirror/state';
-import { EditorView, lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine, keymap } from '@codemirror/view';
+import { EditorView } from '@codemirror/view';
+import { lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine, keymap } from '@codemirror/view';
 import { foldGutter, indentOnInput, indentUnit, syntaxHighlighting, defaultHighlightStyle, bracketMatching, foldKeymap } from '@codemirror/language';
 import { history, defaultKeymap, historyKeymap, insertTab, indentLess } from '@codemirror/commands';
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search';
@@ -129,6 +130,15 @@ class Scrimp extends EditorView {
             },
         ]);
         this.dispatch({ effects: StateEffect.appendConfig.of(newKeymap) });
+        return this;
+    }
+
+    addUpdate(callback) {
+        if (typeof callback === 'function') {
+            const newUpdate = EditorView.updateListener.of(callback);
+            this.dispatch({ effects: StateEffect.appendConfig.of(newUpdate) });
+        }
+        return this;
     }
 
     /******************** CONTENT */
@@ -139,6 +149,7 @@ class Scrimp extends EditorView {
 
     setContent(content, from = 0, to = this.state.doc.length) {
         this.dispatch({ changes: { from, to, insert: content } });
+        return this;
     }
 
     /******************** COMMANDS */
@@ -148,6 +159,7 @@ class Scrimp extends EditorView {
     selectAll() {
         const state = this.viewState.state;
         this.dispatch(state.update({ selection: {anchor: 0, head: state.doc.length}, userEvent: "select" }));
+        return this;
     }
 
 }

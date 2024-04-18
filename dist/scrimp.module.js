@@ -23044,16 +23044,26 @@ class Scrimp extends EditorView {
             },
         ]);
         this.dispatch({ effects: StateEffect.appendConfig.of(newKeymap) });
+        return this;
+    }
+    addUpdate(callback) {
+        if (typeof callback === 'function') {
+            const newUpdate = EditorView.updateListener.of(callback);
+            this.dispatch({ effects: StateEffect.appendConfig.of(newUpdate) });
+        }
+        return this;
     }
     getContent() {
         return this.state.doc.toString();
     }
     setContent(content, from = 0, to = this.state.doc.length) {
         this.dispatch({ changes: { from, to, insert: content } });
+        return this;
     }
     selectAll() {
         const state = this.viewState.state;
         this.dispatch(state.update({ selection: {anchor: 0, head: state.doc.length}, userEvent: "select" }));
+        return this;
     }
 }
 
