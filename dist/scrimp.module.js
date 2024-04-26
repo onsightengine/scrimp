@@ -23607,6 +23607,11 @@ class Scrimp extends EditorView {
         this.dispatch({ selection: { anchor: pos } });
         return this;
     }
+    setSelection(from, to) {
+        if (Number.isNaN(from) || Number.isNaN(to)) return this;
+        this.dispatch({ selection: { anchor: from, head: to } });
+        return this;
+    }
     selectAll() {
         this.dispatch(this.state.update({ selection: { anchor: 0, head: this.state.doc.length }, userEvent: 'select' }));
         return this;
