@@ -13,11 +13,12 @@ import { closeBrackets, autocompletion, closeBracketsKeymap, completionKeymap } 
 import { lintKeymap, linter, lintGutter } from '@codemirror/lint';
 
 // Language
-import { javascript } from "@codemirror/lang-javascript";
+import { javascript } from '@codemirror/lang-javascript';
+import { python } from '@codemirror/lang-python';
 
 // Theme
 // - Editor: https://thememirror.net/create
-import { oneDark } from "@codemirror/theme-one-dark";
+import { oneDark } from '@codemirror/theme-one-dark';
 import { themeSuey } from './theme/theme-suey.js';
 
 // // Linter (find errors)
@@ -49,8 +50,8 @@ class Scrimp extends EditorView {
             lineNumbers(),
             highlightActiveLineGutter(),
             highlightSpecialChars(),
-            history(),
             foldGutter(),
+            lintGutter(),
             // drawSelection(), //NOTE: Don't want, allows browser to draw native selection color
             dropCursor(),
             EditorState.allowMultipleSelections.of(true),
@@ -78,10 +79,11 @@ class Scrimp extends EditorView {
     }
 
     constructor(parent, options = {}) {
+        if (typeof options !== 'object') options = {};
         if (options.initialContents == null) options.initialContents = '';
         if (options.theme == null) options.theme = 'none';
         if (options.tabSize == null) options.tabSize = 4;
-        if (options.language == null) options.language = [ 'javascript' ];
+        if (options.language == null) options.language = 'javascript';
         if (options.linter == null) options.linter = true;
 
         // EditorView
@@ -90,24 +92,26 @@ class Scrimp extends EditorView {
         // Extensions
         const extensions = Scrimp.defaultExtensions();
 
-        // Options
-        let linterCount = 0;
-        if (options) {
-            if (options.theme) {
-                if (options.theme === 'dark') { extensions.push(oneDark); }
-                if (options.theme === 'suey') { extensions.push(themeSuey); }
-            }
-            if (options.tabSize) extensions.push(indentUnit.of(" ".repeat(options.tabSize)));
-            if (Array.isArray(options.language)) {
-                for (const lang of options.language) {
-                    if (lang === 'javascript') {
-                        extensions.push(javascript());
-                        // if (options.linter) extensions.push(esprimaLinter);
-                    }
-                }
-            }
+        // Compartments
+        this.historyCompartment = new Compartment();
+        this.languageCompartment = new Compartment();
+        this.linterCompartment = new Compartment();
+
+        // History
+        extensions.push(this.historyCompartment.of(history()));
+
+        // Language
+        if (options.language === 'javascript') {
+            extensions.push(this.languageCompartment.of(javascript()));
+            // if (options.linter) extensions.push(esprimaLinter);
         }
-        if (linterCount > 0) extensions.push(lintGutter());
+
+        // Theme
+        if (options.theme === 'dark') { extensions.push(oneDark); }
+        if (options.theme === 'suey') { extensions.push(themeSuey); }
+
+        // Tab Size
+        if (options.tabSize) extensions.push(indentUnit.of(" ".repeat(options.tabSize)));
 
         // State
         const state = EditorState.create({
@@ -120,16 +124,16 @@ class Scrimp extends EditorView {
     /******************** CALLBACK */
 
     addKeymap(key = '', callback) {
-        const newKeymap = keymap.of([
-            {
+        if (key && key !== '') {
+            const newKeymap = keymap.of([ {
                 key, // i.e. 'Ctrl-Enter', 'Ctrl-S', etc.
                 run: (view) => {
                     if (typeof callback === 'function') callback(view);
                     return true;
                 },
-            },
-        ]);
-        this.dispatch({ effects: StateEffect.appendConfig.of(newKeymap) });
+            }, ]);
+            this.dispatch({ effects: StateEffect.appendConfig.of(newKeymap) });
+        }
         return this;
     }
 
@@ -160,6 +164,24 @@ class Scrimp extends EditorView {
         const state = this.viewState.state;
         this.dispatch(state.update({ selection: {anchor: 0, head: state.doc.length}, userEvent: "select" }));
         return this;
+    }
+
+    /******************** HISTORY */
+
+    clearHistory() {
+        this.dispatch({ effects: [ this.historyCompartment.reconfigure([]) ] });
+        this.dispatch({ effects: [ this.historyCompartment.reconfigure([ history() ]) ] });
+    }
+
+    /******************** LANGUAGE */
+
+    setLanguage(language = 'javascript') {
+        this.dispatch({ effects: [ this.languageCompartment.reconfigure([]) ] });
+        if (language === 'javascript') {
+            this.dispatch({ effects: [ this.languageCompartment.reconfigure([ javascript() ]) ] });
+        } else if (language === 'python') {
+            this.dispatch({ effects: [ this.languageCompartment.reconfigure([ python() ]) ] });
+        }
     }
 
 }
