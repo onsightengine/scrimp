@@ -23600,9 +23600,15 @@ class Scrimp extends EditorView {
         this.dispatch({ changes: { from, to, insert: content } });
         return this;
     }
+    getCursor() {
+        return this.state.selection.main.head;
+    }
+    setCursor(pos) {
+        this.dispatch({ selection: { anchor: pos } });
+        return this;
+    }
     selectAll() {
-        const state = this.viewState.state;
-        this.dispatch(state.update({ selection: {anchor: 0, head: state.doc.length}, userEvent: "select" }));
+        this.dispatch(this.state.update({ selection: { anchor: 0, head: this.state.doc.length }, userEvent: 'select' }));
         return this;
     }
     clearHistory() {
