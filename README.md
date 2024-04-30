@@ -4,6 +4,6 @@
 
 # Scrimp
 
-Customized CodeMirror 6 editor for use with the Salinity Engine.
+Customized CodeMirror 6 editor for use with the Salinity Editor.
 
 <br />
