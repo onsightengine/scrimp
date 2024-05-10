@@ -176,8 +176,9 @@ class Scrimp extends EditorView {
     }
 
     setSelection(from, to) {
-        if (Number.isNaN(from) || Number.isNaN(to)) return this;
-        this.dispatch({ selection: { anchor: from, head: to } });
+        if (Number.isFinite(from) && Number.isFinite(to)) {
+            this.dispatch({ selection: { anchor: from, head: to } });
+        }
         return this;
     }
 
