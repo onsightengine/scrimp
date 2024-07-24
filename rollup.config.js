@@ -10,11 +10,11 @@ function header() {
     return {
         renderChunk(code) {
             return `/**
- * @description Scripter
- * @about       Customized CodeMirror 6 editor for use with the Salinity Editor.
+ * @description Scrimp
+ * @about       Customized CodeMirror 6 editor for use with the Onsight Editor.
  * @author      Stephens Nunnally <@stevinz>
  * @license     MIT - Copyright (c) 2024 Stephens Nunnally
- * @source      https://github.com/salinityengine/scripter
+ * @source      https://github.com/onsightengine/scrimp
  * @version     v${pkg.version}
  */
 ${code}`;

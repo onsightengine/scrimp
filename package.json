@@ -1,7 +1,7 @@
 {
-  "name": "@salinity/scrimp",
-  "version": "0.0.2",
-  "description": "Customized CodeMirror editor for use with the Salinity Engine.",
+  "name": "@scidian/scrimp",
+  "version": "0.0.3",
+  "description": "Customized CodeMirror editor for use with the Onsight Engine.",
   "module": "src/Scrimp.js",
   "main": "dist/scrimp.module.js",
   "type": "module",
@@ -16,7 +16,7 @@
   ],
   "keywords": [
     "scrimp",
-    "salinity",
+    "onsight",
     "engine",
     "text",
     "editor",
@@ -29,14 +29,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/salinityengine/scrimp.git"
+    "url": "git+https://github.com/onsightengine/scrimp.git"
   },
   "author": "Stephens Nunnally <stephens@scidian.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/salinityengine/scrimp/issues"
+    "url": "https://github.com/onsightengine/scrimp/issues"
   },
-  "homepage": "https://github.com/salinityengine/scrimp",
+  "homepage": "https://github.com/onsightengine/scrimp",
   "private": false,
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
